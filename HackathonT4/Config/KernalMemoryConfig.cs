@@ -2,7 +2,7 @@
 
 namespace HackathonT4.Config
 {
-    public class KernalMemoryConfig
+    public static class KernalMemoryConfig
     {
         public static IKernelMemory GetMemoryConnector(IConfiguration configuration)
         {
@@ -23,14 +23,15 @@ namespace HackathonT4.Config
                     Auth = AzureOpenAIConfig.AuthTypes.APIKey,
                     APIKey = configuration.GetValue<string>("ApiKey") ?? string.Empty
                 })
-                .WithSimpleTextDb(new Microsoft.KernelMemory.MemoryStorage.DevTools.SimpleTextDbConfig()
-                {
-                    Directory = @"D:\\Repo\\Hackathon-03-16\\Hackathon-03-16\\HackathonT4\\Assets",
-                    StorageType = Microsoft.KernelMemory.FileSystem.DevTools.FileSystemTypes.Disk
-                })
-                .Build();
+                // .WithSimpleTextDb(new Microsoft.KernelMemory.MemoryStorage.DevTools.SimpleTextDbConfig()
+                // {
+                //     Directory = @"D:\\Repo\\Hackathon-03-16\\Hackathon-03-16\\HackathonT4\\Assets",
+                //     StorageType = Microsoft.KernelMemory.FileSystem.DevTools.FileSystemTypes.Disk
+                // })
+                // .Build();
+                .Build<MemoryServerless>();
 
-            ImportDatabase(builder, @"D:\\Repo\\Hackathon-03-16\\Hackathon-03-16\\HackathonT4\\No").GetAwaiter();
+            ImportDatabase(builder, @"D:\\Repo\\Hackathon-03-16\\Hackathon-03-16\\HackathonT4\\MockData").GetAwaiter();
             
             var answer = builder.AskAsync("Give me some data from \"company extract.txt\"").GetAwaiter().GetResult();
             
@@ -56,6 +57,11 @@ namespace HackathonT4.Config
             while (!await memory.IsDocumentReadyAsync("file001"))
             {
                 Console.WriteLine("Wait for document to be ready...");
+                // var status = await memory.GetDocumentStatusAsync("file001");
+                // foreach (var RemainingSteps in status?.RemainingSteps)
+                // {
+                //     Console.WriteLine($"Status: {RemainingSteps} step remaining");
+                // }
             }
 
             var info = await memory.GetDocumentStatusAsync("file001");

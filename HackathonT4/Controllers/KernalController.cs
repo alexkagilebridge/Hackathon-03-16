@@ -16,9 +16,32 @@ public class KernalController : ControllerBase
     }
 
     [HttpGet]
-    public string Get()
+    public async Task<string> Get(string question)
     {
-        var answer = _kernelMemory.AskAsync("Give me some data from \"company extract.csv\"").GetAwaiter().GetResult();
-        return answer.ToString() ?? string.Empty;
+        // await ImportDatabase();
+        var answer = _kernelMemory.AskAsync(question).GetAwaiter().GetResult();
+        return answer.Result;
+    }
+    
+    private async Task ImportDatabase()
+    {
+        await _kernelMemory.DeleteDocumentAsync("file001");
+    
+        Document document = new Document("file001");
+        DirectoryInfo directory = new DirectoryInfo(@"D:\\Repo\\Hackathon-03-16\\Hackathon-03-16\\HackathonT4\\MockData");
+        var alldirFiles = directory.EnumerateFiles();
+
+        foreach (var file in alldirFiles)
+        {
+            Console.WriteLine($"Importing {file.Name}");
+            document.AddFile(file.FullName);
+            document.AddTag("document_name", file.Name);
+        }
+        await _kernelMemory.ImportDocumentAsync(document);
+
+        while (!await _kernelMemory.IsDocumentReadyAsync("file001"))
+        {
+            Console.WriteLine("Wait for document to be ready...");
+        }
     }
 }
