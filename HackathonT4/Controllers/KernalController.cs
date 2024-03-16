@@ -18,7 +18,7 @@ public class KernalController : ControllerBase
     [HttpGet]
     public string Get()
     {
-        var answer = _kernelMemory.AskAsync("Hello World!").GetAwaiter().GetResult();
+        var answer = _kernelMemory.AskAsync("Give me some data from \"company extract.csv\"").GetAwaiter().GetResult();
         return answer.ToString() ?? string.Empty;
     }
 }
