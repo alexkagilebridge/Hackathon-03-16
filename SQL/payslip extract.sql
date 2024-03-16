@@ -1,4 +1,4 @@
-SELECT  [PayslipID]
+SELECT top(100)  [PayslipID]
   
       ,[GrossEarnings]
       ,[Deductions]
@@ -22,3 +22,4 @@ SELECT  [PayslipID]
       ,[PayslipType]
   
   FROM [Sage300].[Payroll].[Payslip]
+  order by PayslipID

@@ -1,5 +1,5 @@
 
-  select ps.PayslipID
+  select top (100) ps.PayslipID
 		
 
 	  ,EG.[GenEntityID]
@@ -33,3 +33,5 @@
     INNER JOIN Company.CompanyRule cr on ER.CompanyRuleID = cr.CompanyRuleID
     LEFT JOIN Company.PayPeriodGen AS pg ON pg.PayPeriodGenID = EPP.PayPeriodGenID
     INNER JOIN Payroll.Payslip AS ps ON ps.EmployeePayPeriodID = EPP.EmployeePayPeriodID  
+
+	order by PayslipID
