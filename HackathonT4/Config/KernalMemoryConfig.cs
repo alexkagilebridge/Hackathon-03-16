@@ -1,33 +1,33 @@
-﻿namespace HackathonT4.Config
+﻿using Microsoft.KernelMemory;
+
+namespace HackathonT4.Config
 {
     public class KernalMemoryConfig
     {
-        public static IKerneIMemory GetMemoryConnector()
+        public static IKernelMemory GetMemoryConnector(IConfiguration configuration)
         {
             return new KernelMemoryBuilder()
                 .WithAzureOpenAITextEmbeddingGeneration(new AzureOpenAIConfig
                 {
                     APIType = AzureOpenAIConfig.APITypes.EmbeddingGeneration,
-                    Endpoint = "ENDPOINT",
-                    Deployment = "Embedding",
+                    Endpoint = "https://ai-hack-team4.openai.azure.com/",
+                    Deployment = "HackEmbedding",
                     Auth = AzureOpenAIConfig.AuthTypes.APIKey,
-                    APIKey = "KEY"
+                    APIKey = configuration.GetSection("ApiKey").ToString() ?? string.Empty
                 })
                 .WithAzureOpenAITextGeneration(new AzureOpenAIConfig
                 {
                     APIType = AzureOpenAIConfig.APITypes.ChatCompletion,
-                    Endpoint = "ENDPOINT",
+                    Endpoint = "https://ai-hack-team4.openai.azure.com/",
                     Deployment = "gpt4_vision",
                     Auth = AzureOpenAIConfig.AuthTypes.APIKey,
-                    APIKey = "KEY"
+                    APIKey = configuration.GetSection("ApiKey").ToString() ?? string.Empty
                 })
-                .BuildMemoryServerless()
-                .WithSimpleTextMemory(new Microsoft.KerneIMemory.MemoryStorage.DevTools.SimpleTextDbConfig()
+                .WithSimpleTextDb(new Microsoft.KernelMemory.MemoryStorage.DevTools.SimpleTextDbConfig()
                 {
-                    Directory = @"C:\Inyard\IT\TestMemoryKernel",
-                    StorageType = Microsoft.KerneIMemory.FileSystem.DevTools.FileSystemTypes.Disk
+                    Directory = @"D:\\Repo\\Hackathon-03-16\\Hackathon-03-16\\HackathonT4\\Assets",
+                    StorageType = Microsoft.KernelMemory.FileSystem.DevTools.FileSystemTypes.Disk
                 })
-                .WithAzureBlobsStorage(new AzureBlobsConfig())
                 .Build();
         }
     }
